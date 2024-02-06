@@ -79,3 +79,8 @@ class AlquilerViewSet(viewsets.ModelViewSet):
 class PatinetesLibresViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Patinete.objects.filter(alquiler__isnull=True)
     serializer_class = PatineteSerializer
+
+
+class PatinetesOcupadosViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Patinete.objects.filter(alquiler__isnull=False)
+    serializer_class = PatineteSerializer
