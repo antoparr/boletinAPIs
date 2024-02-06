@@ -1,0 +1,26 @@
+# Use postgres/example user/password credentials
+version: '3.1'
+
+services:
+# https://hub.docker.com/_/postgres
+# https://github.com/cookiecutter/cookiecutter-django
+# https://cookiecutter-django.readthedocs.io/en/latest/developing-locally-docker.html
+  postgres:
+    build:
+      context: .
+      dockerfile: ./compose/production/postgres/Dockerfile
+    image: django-base-boletin1
+    container_name: django-boletin1
+    env_file:
+      - ./.envs/.local/.postgres
+    volumes:
+      - django_boletin1_data:/var/lib/postgresql/data
+      - django_boletin1_data_backups:/backups
+    ports:
+      - 5432:5432
+
+volumes:
+  django_boletin1_data:
+  django_boletin1_data_backups:
+
+
