@@ -1,13 +1,17 @@
+from django.db import models
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly  # Correct import
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from .models import Alquiler, Patinete, Usuario
-from .serializers import AlquilerSerializer, PatineteSerializer
+from .serializers import AlquilerSerializer, PatineteSerializer, UserSerializer
 from django.utils import timezone
 from rest_framework import viewsets
 from .models import Alquiler, IsAdminOrReadOnly, permissions, IsOwnerOrReadOnly
 from .serializers import AlquilerSerializer
+from rest_framework import generics
+from django.contrib.auth.models import User
+
 
 class PatineteViewSet(viewsets.ModelViewSet):
     queryset = Patinete.objects.all()
@@ -38,7 +42,6 @@ class AlquilerViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['POST'])
     def liberar(self, request):
-        # Lógica para terminar un alquiler y calcular el coste final
         patinete_numero = request.data.get('patinete_numero', None)
 
         try:
@@ -46,7 +49,7 @@ class AlquilerViewSet(viewsets.ModelViewSet):
             usuario = request.user
             alquiler = Alquiler.objects.filter(patinete=patinete, usuario=usuario, fecha_entrega__isnull=True).latest('fecha_desbloqueo')
 
-            # Realizar lógica para terminar el alquiler, establecer fecha_entrega, calcular coste_final, etc.
+            # Para terminar el alquiler, establecer fecha_entrega, calcular coste_final, etc.
             alquiler.fecha_entrega = timezone.now()
             alquiler.coste_final = calcular_coste_final(alquiler)
             alquiler.save()
@@ -61,20 +64,24 @@ class AlquilerViewSet(viewsets.ModelViewSet):
         except Alquiler.DoesNotExist:
             return Response({'error': 'No hay un alquiler activo para este patinete y usuario'}, status=status.HTTP_400_BAD_REQUEST)
 
+
 def calcular_coste_final(alquiler):
     # Implementa la lógica para calcular el coste final basado en la duración del alquiler, precios, etc.
     # Puedes adaptar esta función según tus necesidades específicas.
     return 0.0
+
 
 class AlquilerViewSet(viewsets.ModelViewSet):
     queryset = Alquiler.objects.all()
     serializer_class = AlquilerSerializer
     permission_classes = [permissions.IsAuthenticated, IsAdminOrReadOnly]  # Agregar el nuevo permiso
 
+
 class AlquilerViewSet(viewsets.ModelViewSet):
     queryset = Alquiler.objects.all()
     serializer_class = AlquilerSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]  # Agregar el nuevo permiso
+
 
 class PatinetesLibresViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Patinete.objects.filter(alquiler__isnull=True)
@@ -84,3 +91,18 @@ class PatinetesLibresViewSet(viewsets.ReadOnlyModelViewSet):
 class PatinetesOcupadosViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Patinete.objects.filter(alquiler__isnull=False)
     serializer_class = PatineteSerializer
+
+
+class UserOrderByDebitoView(generics.ListAPIView):
+    queryset = User.objects.all().order_by('-debito')
+    serializer_class = UserSerializer
+
+
+class TopTenPatinetesAlquiladosView(generics.ListAPIView):
+    queryset = Patinete.objects.annotate(num_alquileres=models.Count('alquileres')).order_by('-num_alquileres')[:10]
+    serializer_class = PatineteSerializer
+
+
+class TopUsuariosConMasAlquileresView(generics.ListAPIView):
+    queryset = User.objects.annotate(num_alquileres=models.Count('alquileres')).order_by('-num_alquileres')[:3]
+    serializer_class = UserSerializer

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Patinete, Alquiler
+from .models import Patinete, Alquiler, User
 
 
 class PatineteSerializer(serializers.ModelSerializer):
@@ -12,3 +12,9 @@ class AlquilerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Alquiler
         fields = ['id', 'usuario', 'patinete', 'fecha_desbloqueo', 'fecha_entrega', 'coste_final']
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'debito']
