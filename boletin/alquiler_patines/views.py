@@ -65,12 +65,6 @@ class AlquilerViewSet(viewsets.ModelViewSet):
             return Response({'error': 'No hay un alquiler activo para este patinete y usuario'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-def calcular_coste_final(alquiler):
-    # Implementa la lógica para calcular el coste final basado en la duración del alquiler, precios, etc.
-    # Puedes adaptar esta función según tus necesidades específicas.
-    return 0.0
-
-
 class AlquilerViewSet(viewsets.ModelViewSet):
     queryset = Alquiler.objects.all()
     serializer_class = AlquilerSerializer
