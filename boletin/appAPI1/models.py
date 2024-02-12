@@ -12,6 +12,7 @@ class Marca(models.Model):
     class Meta:
         verbose_name_plural = "Marcas"
 
+
 class Vehiculo(models.Model):
     TIPO_CHOICES = (
         ('COCHE', 'Coche'),
