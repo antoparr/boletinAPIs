@@ -53,7 +53,8 @@ INSTALLED_APPS = [
     'drf_spectacular_sidecar',
     'act1boletinREST',
     'appAPI1',
-    'alquiler_patines'
+    'alquiler_patines',
+    'django_filters'
 ]
 
 MIDDLEWARE = [

@@ -1,35 +1,50 @@
 from django.db import models
-from django.contrib.auth.models import User
+
 
 # Create your models here.
+
 class Marca(models.Model):
-    nombre = models.CharField(max_length=100, unique=True)
+    nombre = models.CharField(max_length=50)
 
     def __str__(self):
-        return self.nombre
+        return f"{self.nombre}"
+
+    class Meta:
+        verbose_name_plural = "Marcas"
 
 class Vehiculo(models.Model):
     TIPO_CHOICES = (
-        ('Coche', 'Coche'),
-        ('Ciclomotor', 'Ciclomotor'),
-        ('Motocicleta', 'Motocicleta'),
+        ('COCHE', 'Coche'),
+        ('CICLO', 'Ciclomotor'),
+        ('MOTO', 'Motocicleta'),
     )
 
     COLOR_CHOICES = (
-        ('Rojo', 'Rojo'),
-        ('Azul', 'Azul'),
-        ('Verde', 'Verde'),
+        ('ROJO', 'Rojo'),
+        ('AZUL', 'Azul'),
+        ('VERDE', 'Verde'),
+        ('NEGRO', 'Negro'),
+        ('GRIS', 'Gris'),
+        ('BLANCO', 'Blanco'),
+        ('OTRO', 'Otro'),
+        # Agrega más colores según sea necesario
     )
 
-    tipo_vehiculo = models.CharField(max_length=50, choices=TIPO_CHOICES)
+    tipo_vehiculo = models.CharField(max_length=20, choices=TIPO_CHOICES)
     chasis = models.CharField(max_length=50, unique=True)
-    marca = models.ForeignKey(Marca, on_delete=models.CASCADE)
+    marca = models.ForeignKey(Marca, models.PROTECT)
     modelo = models.CharField(max_length=50)
-    matricula = models.CharField(max_length=7, unique=True)
-    color = models.CharField(max_length=50, choices=COLOR_CHOICES)
+    matricula = models.CharField(max_length=20, unique=True)
+    color = models.CharField(max_length=20, choices=COLOR_CHOICES)
     fecha_fabricacion = models.DateField()
     fecha_matriculacion = models.DateField()
     fecha_baja = models.DateField(null=True, blank=True)
     suspendido = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.tipo_vehiculo} - {self.modelo} - {self.matricula}"
+
+    class Meta:
+        verbose_name_plural = "Vehiculos"
 
 
