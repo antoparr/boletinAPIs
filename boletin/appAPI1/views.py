@@ -9,11 +9,13 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.permissions import IsAuthenticated
 from django.core.exceptions import ObjectDoesNotExist
 
+
 class MarcaViewSet(viewsets.ModelViewSet):
     queryset = Marca.objects.all()
     serializer_class = MarcaSerializer
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
+
 
 class VehiculoViewSet(viewsets.ModelViewSet):
     queryset = Vehiculo.objects.all()

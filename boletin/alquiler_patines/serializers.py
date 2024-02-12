@@ -1,20 +1,21 @@
 from rest_framework import serializers
-from .models import Patinete, Alquiler, User
+
+from .models import Usuario, Alquiler, Patinete
+
+
+class UsuarioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Usuario
+        fields = '__all__'
 
 
 class PatineteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patinete
-        fields = ['id', 'numero', 'tipo', 'precio_desbloqueo', 'precio_minuto']
+        fields = '__all__'
 
 
 class AlquilerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Alquiler
-        fields = ['id', 'usuario', 'patinete', 'fecha_desbloqueo', 'fecha_entrega', 'coste_final']
-
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['id', 'username', 'email', 'debito']
+        fields = '__all__'

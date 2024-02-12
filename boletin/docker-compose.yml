@@ -10,17 +10,17 @@ services:
       context: .
       dockerfile: ./compose/production/postgres/Dockerfile
     image: django-base-boletin1
-    container_name: django-boletin1
+    container_name: django-boletin1APA
     env_file:
       - ./.envs/.local/.postgres
     volumes:
-      - django_boletin1_data:/var/lib/postgresql/data
-      - django_boletin1_data_backups:/backups
+      - django_boletin1APA_data:/var/lib/postgresql/data
+      - django_boletin1APA_data_backups:/backups
     ports:
       - 5432:5432
 
 volumes:
-  django_boletin1_data:
-  django_boletin1_data_backups:
+  django_boletin1APA_data:
+  django_boletin1APA_data_backups:
 
 
